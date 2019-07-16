@@ -3,6 +3,7 @@ from random import randint
 
 # TODO: I don't love this because it still requires manual assignment for dungeon progression, but it works for now
 def from_dungeon_level(table, dungeon_level):
+    "WOW COOL MY IDE IS COOL"
     for (value, level) in reversed(table):
         if dungeon_level >= level:
             return value
