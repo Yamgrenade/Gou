@@ -4,6 +4,7 @@ from game_messages import Message
 from entity import Entity
 from components.ai import ConfusedMonster, BasicMonster
 from components.fighter import Fighter
+from components.level import Level
 from render_functions import RenderOrder
 
 
@@ -182,7 +183,7 @@ def cast_confuse(*args, **kwargs):
 
     return results
 
-# Should only be used in the test arena
+# Should only be used in the test arena.
 def spawn_orc(*args, **kwargs):
     entities = kwargs.get("entities")
     target_x = kwargs.get("target_x")
@@ -204,5 +205,21 @@ def spawn_orc(*args, **kwargs):
                 ),
             }
         )
+
+    return results
+
+def give_xp(*args, **kwargs):
+    entity = args[0]
+
+    amount = entity.level.experience_to_next_level
+
+    results = []
+    results.append(
+            {
+                "consumed": False,
+                "message": Message("You pore through the tome and shudder.", libtcod.yellow),
+                "xp": amount
+            }
+    )
 
     return results

@@ -7,7 +7,7 @@ from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
-from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, spawn_orc
+from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, spawn_orc, give_xp
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from render_functions import RenderOrder
@@ -216,7 +216,11 @@ class GameMap:
 
         orc_wand_item_component = Item(use_function=spawn_orc, targeting=True, targeting_message=Message(
             'Left click to spawn an orc.', libtcod.light_cyan))
-        orc_wand_item = Entity(2, 2, 'i', libtcod.green, 'Conjure Orc Wand', render_order=RenderOrder.ITEM,
+        orc_wand_item = Entity(2, 2, 'i', libtcod.dark_green, 'Conjure Orc Wand', render_order=RenderOrder.ITEM,
                                 item=orc_wand_item_component)
+        xp_book_item_component = Item(use_function=give_xp)
+        xp_book_item = Entity(3, 2, '=', libtcod.purple, 'Book of Forbidden Knowledge', render_order=RenderOrder.ITEM,
+                                item=xp_book_item_component)
 
+        entities.append(xp_book_item)
         entities.append(orc_wand_item)
