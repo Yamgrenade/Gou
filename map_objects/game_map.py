@@ -7,7 +7,7 @@ from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
-from item_functions import heal, cast_lightning, cast_fireball, cast_confuse
+from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, spawn_orc
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from render_functions import RenderOrder
@@ -208,3 +208,15 @@ class GameMap:
             return True
 
         return False
+    
+    # Generates the test arena, which has some hard coded cheaty items for testing
+    def make_arena(self, entities):
+        self.dungeon_level = -1
+        self.create_room(Rect(0, 0, self.width - 1, self.height - 1))
+
+        orc_wand_item_component = Item(use_function=spawn_orc, targeting=True, targeting_message=Message(
+            'Left click to spawn an orc.', libtcod.light_cyan))
+        orc_wand_item = Entity(2, 2, 'i', libtcod.green, 'Conjure Orc Wand', render_order=RenderOrder.ITEM,
+                                item=orc_wand_item_component)
+
+        entities.append(orc_wand_item)
