@@ -2,7 +2,7 @@ import tcod as libtcod
 
 from death_functions import kill_player, kill_monster
 from input_handlers import handle_keys, handle_mouse, handle_main_menu
-from loader_functions.initialize_new_game import get_constants, get_game_variables
+from loader_functions.initialize_new_game import get_constants, get_game_variables, get_arena_variables
 from loader_functions.data_loaders import save_game, load_game
 from menus import main_menu, message_box
 from game_states import GameStates
@@ -300,6 +300,7 @@ def main():
             new_game = action.get('new_game')
             load_saved_game = action.get('load_game')
             exit_game = action.get('exit')
+            arena = action.get('arena')
 
             if new_game:
                 player, entities, game_map, message_log, game_state = get_game_variables(constants)
@@ -313,6 +314,11 @@ def main():
                 except FileNotFoundError:
                     popup(con, 'No save game to load',
                           constants['screen_width'], constants['screen_height'])
+            elif arena:
+                player, entities, game_map, message_log, game_state = get_arena_variables(constants)
+                game_state = GameStates.PLAYERS_TURN
+
+                show_main_menu = False
             elif exit_game:
                 break
 
