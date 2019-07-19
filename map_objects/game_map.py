@@ -166,7 +166,7 @@ class GameMap:
                                   item=item_component)
                 elif item_choice == 'sword':
                     equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
-                    item = Entity(x, y, '/', libtcod.sky, 'Sword', equipment=equippable_component)
+                    item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
                 elif item_choice == 'shield':
                     equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
                     item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
@@ -222,5 +222,9 @@ class GameMap:
         xp_book_item = Entity(3, 2, '=', libtcod.purple, 'Book of Forbidden Knowledge', render_order=RenderOrder.ITEM,
                                 item=xp_book_item_component)
 
+        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
+        sword_item = Entity(4, 2, '/', libtcod.sky, 'Sword', equippable=equippable_component)
+
+        entities.append(sword_item)
         entities.append(xp_book_item)
         entities.append(orc_wand_item)
