@@ -183,6 +183,7 @@ def cast_confuse(*args, **kwargs):
 
     return results
 
+
 # Should only be used in the test arena.
 def spawn_orc(*args, **kwargs):
     entities = kwargs.get("entities")
@@ -208,10 +209,12 @@ def spawn_orc(*args, **kwargs):
 
     return results
 
+
+# Should only be used in the test arena.
 def give_xp(*args, **kwargs):
     entity = args[0]
 
-    amount = entity.level.experience_to_next_level
+    amount = entity.level.experience_to_next_level + 1
 
     results = []
     results.append(

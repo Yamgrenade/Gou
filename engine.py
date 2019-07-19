@@ -129,7 +129,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
             elif level_up == 'def':
                 player.fighter.base_defense += 1
 
-            game_state = previous_game_state
+            # game_state = previous_game_state   # This is the only way I found that the level up book doesn't lock
+            game_state = GameStates.PLAYERS_TURN # the game, hopefully it's fine but it may give an extra turn on lvl up
 
         if show_character_screen:
             previous_game_state = game_state
