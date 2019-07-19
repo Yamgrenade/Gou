@@ -55,6 +55,12 @@ def handle_main_menu(key):
 
     return {}
 
+def handle_popup(key):
+    key_char = chr(key.c)
+    if key_char != libtcod.KEY_NONE:
+        return {'dismiss': True}
+        
+    return {}
 
 def handle_level_up_menu(key):
     if key:
