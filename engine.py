@@ -9,7 +9,7 @@ from game_states import GameStates
 from entity import get_blocking_entities_at_location
 from fov_functions import initalize_fov, recompute_fov
 from game_messages import Message
-from render_functions import clear_all, render_all
+from render_functions import clear_all, render_all, popup
 
 
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants):
@@ -280,7 +280,6 @@ def main():
     game_state = None
 
     show_main_menu = True
-    show_load_error_message = False
 
     main_menu_background_image = libtcod.image_load('menu_background.png')
 
@@ -294,9 +293,6 @@ def main():
             main_menu(con, main_menu_background_image, constants['screen_width'],
                       constants['screen_height'])
 
-            if show_load_error_message:
-                message_box(con, 'No save game to load', 50, constants['screen_width'], constants['screen_height'])
-
             libtcod.console_flush()
 
             action = handle_main_menu(key)
@@ -306,9 +302,7 @@ def main():
             exit_game = action.get('exit')
             arena = action.get('arena')
 
-            if show_load_error_message and (new_game or load_saved_game or exit_game):
-                show_load_error_message = False
-            elif new_game:
+            if new_game:
                 player, entities, game_map, message_log, game_state = get_game_variables(constants)
                 game_state = GameStates.PLAYERS_TURN
 
@@ -318,7 +312,8 @@ def main():
                     player, entities, game_map, message_log, game_state = load_game()
                     show_main_menu = False
                 except FileNotFoundError:
-                    show_load_error_message = True
+                    popup(con, 'No save game to load',
+                          constants['screen_width'], constants['screen_height'])
             elif arena:
                 player, entities, game_map, message_log, game_state = get_arena_variables(constants)
                 game_state = GameStates.PLAYERS_TURN
@@ -330,7 +325,6 @@ def main():
         else:
             libtcod.console_clear(con)
             play_game(player, entities, game_map, message_log, game_state, con, panel, constants)
-
             show_main_menu = True
 
 
