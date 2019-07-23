@@ -2,6 +2,7 @@
 *.bak
 *.dat
 *.dir
+*savegame
 
 # ide files
 /.idea
