@@ -1,18 +1,18 @@
 import math
 import tcod as libtcod
 
-from components.item import Item
+from components.usable import Usable
 
 from render_functions import RenderOrder
 """
-Class for generic objects, from items to monsters. 
+Class for generic objects, from usables to monsters. 
 Some cleanup could reduce redundancy, specifically with the distance functions.
 """
 
 
 class Entity:
     def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None,
-                 item=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None):
+                 usable=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None):
         self.x = x
         self.y = y
         self.char = char
@@ -22,7 +22,7 @@ class Entity:
         self.render_order = render_order
         self.fighter = fighter
         self.ai = ai
-        self.item = item
+        self.usable = usable
         self.inventory = inventory
         self.stairs = stairs
         self.level = level
@@ -35,8 +35,8 @@ class Entity:
         if self.ai:
             self.ai.owner = self
 
-        if self.item:
-            self.item.owner = self
+        if self.usable:
+            self.usable.owner = self
 
         if self.inventory:
             self.inventory.owner = self
@@ -53,11 +53,11 @@ class Entity:
         if self.equippable:
             self.equippable.owner = self
 
-            # We can't have equippables that aren't also items, so add it if it doesn't have it
-            if not self.item:
-                item = Item()
-                self.item = item
-                self.item.owner = self
+            # We can't have equippables that aren't also usables, so add it if it doesn't have it
+            if not self.usable:
+                usable = Usable()
+                self.usable = usable
+                self.usable.owner = self
 
     # move the entity by the specified dx, dy
     def move(self, dx, dy):
@@ -120,6 +120,11 @@ class Entity:
         dy = other.y - self.y
         return math.sqrt(dx ** 2 + dy ** 2)
 
+    def place(self, x, y):
+        self.x = x
+        self.y = y
+        return self
+
 
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
     for entity in entities:
@@ -127,3 +132,4 @@ def get_blocking_entities_at_location(entities, destination_x, destination_y):
             return entity
 
     return None
+

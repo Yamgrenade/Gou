@@ -29,7 +29,7 @@ class Inventory:
     def use(self, item_entity, **kwargs):
         results = []
 
-        item_component = item_entity.item
+        item_component = item_entity.usable
 
         if item_component.use_function is None:
             # See if we can equip it, if not tell player they can't use this

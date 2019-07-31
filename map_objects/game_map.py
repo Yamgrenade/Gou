@@ -1,4 +1,5 @@
 import tcod as libtcod
+import copy
 
 from entity import Entity
 from game_messages import Message
@@ -6,14 +7,15 @@ from components.ai import BasicMonster
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.fighter import Fighter
-from components.item import Item
+from components.usable import Usable
 from item_functions import heal, cast_lightning, cast_fireball, cast_confuse, spawn_orc, give_xp
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
 from render_functions import RenderOrder
 from components.stairs import Stairs
 from random_utils import random_choice_from_dict, from_dungeon_level
-
+from monsters import monsters
+from items import items
 from random import randint
 
 
@@ -112,82 +114,44 @@ class GameMap:
         num_monsters = randint(0, max_monsters_per_room)
         num_items = randint(0, max_items_per_room)
 
-        monster_chances = {
-            'orc': 80,
-            'troll': from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level)
-            # , 'dragon': 5
-        }
-        item_chances = {
-            'healing_potion': 35,
-            'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
-            'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
-            'lightning_scroll': from_dungeon_level([[25, 4]], self.dungeon_level),
-            'fireball_scroll': from_dungeon_level([[25, 6]], self.dungeon_level),
-            'confuse_scroll': from_dungeon_level([[10, 2]], self.dungeon_level)
-        }
+        # monster_chances = {(monster.name for monster in monsters): (from_dungeon_level(monster.chance, self.dungeon_level) for monster in monsters)}
+        # monster_chances = {monster.name: from_dungeon_level(monster.chance, self.dungeon_level) for monster in monsters}
+        monster_chances = {key: from_dungeon_level(value.chance, self.dungeon_level) for key, value in monsters.items()}
+
+        item_chances = {key: from_dungeon_level(value.chance, self.dungeon_level) for key, value in items.items()}
 
         for i in range(num_monsters):
             # Place randomly
             x = randint(room.x1 + 1, room.x2 - 1)
             y = randint(room.y1 + 1, room.y2 - 1)
 
-            # Check that an existing entity isn't in this space
+            # Check that an existing entity isn't in this space. If not choose one randomly (based on dungeon level) and place it
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 monster_choice = random_choice_from_dict(monster_chances)
-
-                if monster_choice == 'orc':
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
-                    ai_component = BasicMonster()
-                    monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
-                                     render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
-                elif monster_choice == 'troll':
-                    fighter_component = Fighter(hp=30, defense=2, power=8, xp=100)
-                    ai_component = BasicMonster()
-                    monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True,
-                                     render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
-                elif monster_choice == 'dragon':
-                    fighter_component = Fighter(hp=40, defense=2, power=6, xp=250)
-                    ai_component = BasicMonster()
-                    monster = Entity(x, y, 'D', libtcod.darker_red, 'Dragon', blocks=True,
-                                     render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
-
-                entities.append(monster)
+                # monster = monster.entity for monster in monsters if monster.name == monster_choice
+                monster_instance = None
+                for name, monster in monsters.items():
+                    if name == monster_choice:
+                        monster_instance = copy.deepcopy(monster.entity)
+                        monster_instance.place(x, y)
+                        break
+                entities.append(monster_instance)
 
         for i in range(num_items):
+            # Place randomly
             x = randint(room.x1 + 1, room.x2 - 1)
             y = randint(room.y1 + 1, room.y2 - 1)
 
+            # Check that an existing entity isn't in this space. If not choose one randomly (based on dungeon level) and place it
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 item_choice = random_choice_from_dict(item_chances)
 
-                if item_choice == 'healing_potion':
-                    item_component = Item(use_function=heal, amount=40)
-                    item = Entity(x, y, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM,
-                                  item=item_component)
-                elif item_choice == 'sword':
-                    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
-                    item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
-                elif item_choice == 'shield':
-                    equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
-                    item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
-                elif item_choice == 'fireball_scroll':
-                    item_component = Item(use_function=cast_fireball, targeting=True, targeting_message=Message(
-                        'You ready a fireball. (Left click to cast, right click to cancel.)', libtcod.light_cyan),
-                                          damage=25,radius=3)
-                    item = Entity(x, y, '#', libtcod.light_crimson, 'Fireball Scroll', render_order=RenderOrder.ITEM,
-                                  item=item_component)
-                elif item_choice == 'confuse_scroll':
-                    item_component = Item(use_function=cast_confuse, targeting=True, targeting_message=Message(
-                        'You prepare to daze a creature. (Left click to cast, right click to cancel.)',
-                        libtcod.light_cyan))
-                    item = Entity(x, y, '#', libtcod.light_purple, 'Confuse Scroll', render_order=RenderOrder.ITEM,
-                                  item=item_component)
-                else:
-                    item_component = Item(use_function=cast_lightning, damage=40, maximum_range=7)
-                    item = Entity(x, y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
-                                  item=item_component)
-
-                entities.append(item)
+                item_instance = None
+                for name, item in items.items():
+                    if name == item_choice:
+                        item_instance = copy.deepcopy(item.entity)
+                        item_instance.place(x, y)
+                entities.append(item_instance)
 
     def next_floor(self, player, message_log, constants):
         self.dungeon_level += 1
@@ -214,17 +178,15 @@ class GameMap:
         self.dungeon_level = -1
         self.create_room(Rect(0, 0, self.width - 1, self.height - 1))
 
-        orc_wand_item_component = Item(use_function=spawn_orc, targeting=True, targeting_message=Message(
-            'Left click to spawn an orc.', libtcod.light_cyan))
-        orc_wand_item = Entity(2, 2, 'i', libtcod.dark_green, 'Conjure Orc Wand', render_order=RenderOrder.ITEM,
-                                item=orc_wand_item_component)
-        xp_book_item_component = Item(use_function=give_xp)
-        xp_book_item = Entity(3, 2, '=', libtcod.purple, 'Book of Forbidden Knowledge', render_order=RenderOrder.ITEM,
-                                item=xp_book_item_component)
+        arena_sword = copy.deepcopy(items['sword'].entity)
+        arena_sword.place(4, 2)
 
-        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
-        sword_item = Entity(4, 2, '/', libtcod.sky, 'Sword', equippable=equippable_component)
-
-        entities.append(sword_item)
-        entities.append(xp_book_item)
-        entities.append(orc_wand_item)
+        arena_xp_book = copy.deepcopy(items['Book of Forbidden Knowledge'].entity)
+        arena_xp_book.place(3, 2)
+        
+        arena_orc_wand = copy.deepcopy(items['Conjure Orc Wand'].entity)
+        arena_orc_wand.place(2, 2)
+        
+        entities.append(arena_sword)
+        entities.append(arena_xp_book)
+        entities.append(arena_orc_wand)
