@@ -192,7 +192,7 @@ def spawn_orc(*args, **kwargs):
 
     fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
     ai_component = BasicMonster()
-    orc = Entity(target_x, target_y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
+    orc = Entity([], target_x, target_y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
                     render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
 
     entities.append(orc)

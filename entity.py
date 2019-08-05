@@ -11,8 +11,9 @@ Some cleanup could reduce redundancy, specifically with the distance functions.
 
 
 class Entity:
-    def __init__(self, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None,
+    def __init__(self, chance, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None,
                  usable=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None):
+        self.chance = chance
         self.x = x
         self.y = y
         self.char = char

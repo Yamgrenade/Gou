@@ -84,7 +84,7 @@ class GameMap:
                 num_rooms += 1
 
         stairs_component = Stairs(self.dungeon_level + 1)
-        down_stairs = Entity(last_room_center_x, last_room_center_y, '>', libtcod.white, 'Stairs down',
+        down_stairs = Entity([], last_room_center_x, last_room_center_y, '>', libtcod.white, 'Stairs down',
                                  render_order=RenderOrder.STAIRS, stairs=stairs_component)
         entities.append(down_stairs)
 
@@ -114,8 +114,6 @@ class GameMap:
         num_monsters = randint(0, max_monsters_per_room)
         num_items = randint(0, max_items_per_room)
 
-        # monster_chances = {(monster.name for monster in monsters): (from_dungeon_level(monster.chance, self.dungeon_level) for monster in monsters)}
-        # monster_chances = {monster.name: from_dungeon_level(monster.chance, self.dungeon_level) for monster in monsters}
         monster_chances = {key: from_dungeon_level(value.chance, self.dungeon_level) for key, value in monsters.items()}
 
         item_chances = {key: from_dungeon_level(value.chance, self.dungeon_level) for key, value in items.items()}
@@ -132,7 +130,7 @@ class GameMap:
                 monster_instance = None
                 for name, monster in monsters.items():
                     if name == monster_choice:
-                        monster_instance = copy.deepcopy(monster.entity)
+                        monster_instance = copy.deepcopy(monster)
                         monster_instance.place(x, y)
                         break
                 entities.append(monster_instance)
@@ -149,7 +147,7 @@ class GameMap:
                 item_instance = None
                 for name, item in items.items():
                     if name == item_choice:
-                        item_instance = copy.deepcopy(item.entity)
+                        item_instance = copy.deepcopy(item)
                         item_instance.place(x, y)
                 entities.append(item_instance)
 
@@ -178,13 +176,13 @@ class GameMap:
         self.dungeon_level = -1
         self.create_room(Rect(0, 0, self.width - 1, self.height - 1))
 
-        arena_sword = copy.deepcopy(items['sword'].entity)
+        arena_sword = copy.deepcopy(items['sword'])
         arena_sword.place(4, 2)
 
-        arena_xp_book = copy.deepcopy(items['Book of Forbidden Knowledge'].entity)
+        arena_xp_book = copy.deepcopy(items['Book of Forbidden Knowledge'])
         arena_xp_book.place(3, 2)
         
-        arena_orc_wand = copy.deepcopy(items['Conjure Orc Wand'].entity)
+        arena_orc_wand = copy.deepcopy(items['Conjure Orc Wand'])
         arena_orc_wand.place(2, 2)
         
         entities.append(arena_sword)
