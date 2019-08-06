@@ -157,5 +157,9 @@ def handle_mouse(mouse):
         return {'left_click': (x, y)}
     elif mouse.rbutton_pressed:
         return {'right_click': (x, y)}
+    elif mouse.wheel_up:
+        return {'wheel_up': True}
+    elif mouse.wheel_down:
+        return {'wheel_down': True}
 
     return {}
