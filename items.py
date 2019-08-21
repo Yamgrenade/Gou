@@ -12,8 +12,8 @@ from components.ai import BasicMonster
 
 
 items = {
-  'healing_potion': Entity([35], -1, -1, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, 
-    usable=Usable(use_function=heal, amount=40)),
+
+  # WEAPONS
 
   'dagger': Entity([0], 0, 0, "-", libtcod.sky, "Dagger", 
     equippable=Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)),
@@ -23,6 +23,16 @@ items = {
 
   'shield': Entity([[15, 8]], -1, -1, '[', libtcod.darker_orange, 'Shield', 
     equippable=Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)),
+
+  # ARMOR
+
+  'cap':  Entity([100], -1, -1, 'c', libtcod.darker_green, 'Cap', 
+    equippable=Equippable(EquipmentSlots.HEAD, defense_bonus=1)),
+
+  # USABLES
+
+  'healing_potion': Entity([35], -1, -1, '!', libtcod.violet, 'Healing Potion', render_order=RenderOrder.ITEM, 
+    usable=Usable(use_function=heal, amount=40)),
 
   'lightning_scroll': Entity([[25, 4]], -1, -1, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
     usable=Usable(use_function=cast_lightning, damage=40, maximum_range=7)),

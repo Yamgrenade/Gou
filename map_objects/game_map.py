@@ -105,8 +105,6 @@ class GameMap:
             self.tiles[x][y].blocked = False
             self.tiles[x][y].block_sight = False
 
-    # TODO: This should probably get split up so it's easier to add new monsters just by keeping their stats somewhere
-    # Probably with **kwargs, if I had to guess
     def place_entities(self, room, entities):
         max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
         max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)

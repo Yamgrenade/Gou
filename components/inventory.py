@@ -62,7 +62,8 @@ class Inventory:
         results = []
 
         # Make sure that if we drop an item we have equipped, we don't still have it equipped
-        if self.owner.equipment.main_hand == item or self.owner.equipment.off_hand == item:
+
+        if any(slot is item for slot in self.owner.equipment): 
             self.owner.equipment.toggle_equip(item)
 
         item.x = self.owner.x
