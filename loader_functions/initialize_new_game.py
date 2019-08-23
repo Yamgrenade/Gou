@@ -1,5 +1,7 @@
 import tcod as libtcod
 
+from collections import deque
+
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.equippable import Equippable

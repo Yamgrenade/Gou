@@ -59,7 +59,17 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         left_click = mouse_action.get('left_click')
         right_click = mouse_action.get('right_click')
 
+        wheel_up = mouse_action.get('wheel_up')
+        wheel_down = mouse_action.get('wheel_down')
+
+
         player_turn_results = []
+
+        if wheel_up:
+            message_log.scroll_up()
+
+        if wheel_down:
+            message_log.scroll_down()
 
         if move and game_state == GameStates.PLAYERS_TURN:
             dx, dy = move
