@@ -14,6 +14,8 @@ from game_messages import MessageLog
 
 from game_states import GameStates
 
+from items import items
+
 from map_objects.game_map import GameMap
 from map_objects.rectangle import Rect
 
@@ -87,6 +89,7 @@ def get_game_variables(constants):
     level_component = Level()
     equipment_component = Equipment()
     player = Entity(
+        [],
         0,
         0,
         "@",
@@ -101,8 +104,7 @@ def get_game_variables(constants):
     )
     entities = [player]
 
-    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1)
-    dagger = Entity(0, 0, "-", libtcod.sky, "Dagger", equippable=equippable_component)
+    dagger = items["dagger"]
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)
 
@@ -132,6 +134,7 @@ def get_arena_variables(constants):
     level_component = Level()
     equipment_component = Equipment()
     player = Entity(
+        [],
         3,
         3,
         "@",

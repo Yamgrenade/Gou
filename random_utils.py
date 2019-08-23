@@ -3,7 +3,10 @@ from random import randint
 
 # TODO: I don't love this because it still requires manual assignment for dungeon progression, but it works for now
 def from_dungeon_level(table, dungeon_level):
-    "WOW COOL MY IDE IS COOL"
+    """Returns the probablility of somthing spawning in a given dungeon level. 
+    Table is formatted [[probability, lowest possible level], [probability, next lowest possible level], etc]"""
+    if isinstance(table[0], int):
+        return table[0]
     for (value, level) in reversed(table):
         if dungeon_level >= level:
             return value

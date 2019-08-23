@@ -1,4 +1,4 @@
-class Item:
+class Usable:
     def __init__(self, use_function=None, targeting=False, targeting_message=None, **kwargs):
         self.use_function = use_function
         self.targeting = targeting
