@@ -10,6 +10,8 @@ class Fighter:
         self.base_power = power
         self.xp = xp
 
+    # Equipment might want a rework so that it supports many mort effects easier.
+
     @property
     def max_hp(self):
         if self.owner and self.owner.equipment:

@@ -48,5 +48,3 @@ class MessageLog:
         elif len(self.messages) >= self.height and self.scroll_index == 1:
             self.scroll_index -= 1
             self.visible = self.messages[-self.height:]
-
-
