@@ -106,6 +106,7 @@ class GameMap:
             self.tiles[x][y].block_sight = False
 
     def place_entities(self, room, entities):
+        # TODO This will need to be moved once we add supoort for different types of dungeons
         max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
         max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
 
@@ -146,6 +147,10 @@ class GameMap:
                 for name, item in items.items():
                     if name == item_choice:
                         item_instance = copy.deepcopy(item)
+                        if item_instance.equippable: # Add modifiers to equipment
+                            item_instance.name = item_instance.equippable.generate_material(self.dungeon_level) + item_instance.name
+                            item_instance.name = item_instance.name + item_instance.equippable.generate_enchantment(self.dungeon_level)
+                            if ' of ' in item_instance.name: item_instance.color = item_instance.color * libtcod.grey # There should probably be a better way built into equippables to check if somthing is enchantment... like an enchantment attribute
                         item_instance.place(x, y)
                 entities.append(item_instance)
 

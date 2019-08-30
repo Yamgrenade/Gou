@@ -25,7 +25,7 @@ from render_functions import RenderOrder
 
 
 def get_constants():
-    window_title = "Gou 0.1 - Tutorial Testing"
+    window_title = "Gou Prototype 1.0v1 0 Alpona"
 
     screen_width = 80
     screen_height = 50

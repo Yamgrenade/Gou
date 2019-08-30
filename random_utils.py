@@ -1,6 +1,5 @@
 from random import randint
 
-
 # TODO: I don't love this because it still requires manual assignment for dungeon progression, but it works for now
 def from_dungeon_level(table, dungeon_level):
     """Returns the probablility of somthing spawning in a given dungeon level. 
@@ -12,7 +11,6 @@ def from_dungeon_level(table, dungeon_level):
             return value
 
     return 0
-
 
 def random_choice_index(chances):
     random_chance = randint(1, sum(chances))
