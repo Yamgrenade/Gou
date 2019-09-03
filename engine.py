@@ -11,6 +11,8 @@ from fov_functions import initalize_fov, recompute_fov
 from game_messages import Message
 from render_functions import clear_all, render_all, popup
 
+import tricks
+
 
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants):
     fov_recompute = True
@@ -23,6 +25,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
     previous_game_state = game_state
 
     targeting_item = None
+
+    combat_stance = False
 
     while not libtcod.console_is_window_closed():
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
@@ -55,6 +59,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         show_character_screen = action.get('show_character_screen')
         exit = action.get('exit')
         fullscreen = action.get('fullscreen')
+        toggle_combat_stance = action.get('toggle_combat_stance')
 
         left_click = mouse_action.get('left_click')
         right_click = mouse_action.get('right_click')
@@ -71,20 +76,35 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         if wheel_down:
             message_log.scroll_down()
 
+        if toggle_combat_stance:
+            combat_stance = not combat_stance
+            if combat_stance:
+                message_log.add_message(Message('You ready yourself for combat.', libtcod.yellow))
+            else:
+                message_log.add_message(Message('You lower your weapon.', libtcod.yellow))
+
         if move and game_state == GameStates.PLAYERS_TURN:
-            dx, dy = move
-            destination_x = player.x + dx
-            destination_y = player.y + dy
+            if not combat_stance:
+                dx, dy = move
+                destination_x = player.x + dx
+                destination_y = player.y + dy
 
-            if not game_map.is_blocked(destination_x, destination_y):
-                target = get_blocking_entities_at_location(entities, destination_x, destination_y)
+                if not game_map.is_blocked(destination_x, destination_y):
+                    target = get_blocking_entities_at_location(entities, destination_x, destination_y)
 
-                if target:
-                    attack_results = player.fighter.attack(target)
-                    player_turn_results.extend(attack_results)
-                else:
-                    player.move(dx, dy)
-                    fov_recompute = True
+                    if target:
+                        attack_results = player.fighter.attack(target)
+                        player_turn_results.extend(attack_results)
+                    else:
+                        player.move(dx, dy)
+                        fov_recompute = True
+
+                    game_state = GameStates.ENEMY_TURN
+            else:
+                dx, dy = move
+                # TODO: This is all hardcoded right now
+                trick = tricks.tricks_dict.get("halfmoon_slash")
+                player_turn_results.extend(player.trick_list.use(trick, entities=entities, facing=dx))
 
                 game_state = GameStates.ENEMY_TURN
 

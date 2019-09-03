@@ -7,6 +7,7 @@ from components.inventory import Inventory
 from components.equippable import Equippable
 from components.level import Level
 from components.equipment import Equipment
+from components.trick_list import Trick_List
 
 from entity import Entity
 
@@ -90,6 +91,7 @@ def get_game_variables(constants):
     inventory_component = Inventory(26)
     level_component = Level()
     equipment_component = Equipment()
+    trick_list_component = Trick_List()
     player = Entity(
         [],
         0,
@@ -103,6 +105,7 @@ def get_game_variables(constants):
         inventory=inventory_component,
         level=level_component,
         equipment=equipment_component,
+        trick_list=trick_list_component
     )
     entities = [player]
 

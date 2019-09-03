@@ -84,6 +84,7 @@ def handle_character_screen(key):
 
     return {}
 
+
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
 
@@ -117,6 +118,9 @@ def handle_player_turn_keys(key):
 
     elif key_char == 'c':
         return {'show_character_screen': True}
+
+    elif key_char == 'q':
+        return {'toggle_combat_stance': True}
 
     elif key.vk == libtcod.KEY_ENTER:
         return {'take_stairs': True}

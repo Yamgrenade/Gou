@@ -12,7 +12,7 @@ Some cleanup could reduce redundancy, specifically with the distance functions.
 
 class Entity:
     def __init__(self, chance, x, y, char, color, name, blocks=False, render_order=RenderOrder.CORPSE, fighter=None, ai=None,
-                 usable=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None):
+                 usable=None, inventory=None, stairs=None, level=None, equipment=None, equippable=None, trick_list=None, trick=None):
         self.chance = chance
         self.x = x
         self.y = y
@@ -29,6 +29,8 @@ class Entity:
         self.level = level
         self.equipment = equipment
         self.equippable = equippable
+        self.trick_list = trick_list
+        self.trick = trick
 
         if self.fighter:
             self.fighter.owner = self
@@ -53,6 +55,12 @@ class Entity:
 
         if self.equippable:
             self.equippable.owner = self
+
+        if self.trick_list:
+            self.trick_list.owner = self
+
+        if self.trick:
+            self.trick.owner = self
 
             # We can't have equippables that aren't also usables, so add it if it doesn't have it
             if not self.usable:
