@@ -45,7 +45,7 @@ class Equipment:
     def toggle_equip(self, equippable_entity):
         results = []
 
-        slot = equippable_entity.equippable.slot     
+        slot = equippable_entity.equippable.slot
 
         # There is 100% a way to combine each of these to reduce repetition
         if slot == EquipmentSlots.MAIN_HAND:
