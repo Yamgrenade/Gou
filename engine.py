@@ -103,8 +103,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
             else:
                 dx, dy = move
                 # TODO: This is all hardcoded right now
-                trick = tricks.tricks_dict.get("halfmoon_slash")
-                player_turn_results.extend(player.trick_list.use(trick, entities=entities, facing=dx))
+                if (dx != 0 and dy == 0):
+                    trick = tricks.tricks_dict.get("halfmoon_slash")
+                    player_turn_results.extend(player.trick_list.use(trick, entities=entities, facing=dx))
+                if (dx == 0 and dy != 0):
+                    trick = tricks.tricks_dict.get("piercing_lunge")
+                    player_turn_results.extend(player.trick_list.use(trick, entities=entities, facing=dy))
 
                 game_state = GameStates.ENEMY_TURN
 
