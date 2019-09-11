@@ -10,12 +10,15 @@ from entity import get_blocking_entities_at_location
 from fov_functions import initalize_fov, recompute_fov
 from game_messages import Message
 from render_functions import clear_all, render_all, popup
+from camera import Camera
 
 
-def play_game(player, entities, game_map, message_log, game_state, con, panel, constants):
+def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, camera):
+
     fov_recompute = True
-
     fov_map = initalize_fov(game_map)
+
+    camera.update(player)
 
     key = libtcod.Key()
     mouse = libtcod.Mouse()
@@ -34,12 +37,12 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log,
                    constants['screen_width'],
                    constants['screen_height'], constants['bar_width'], constants['panel_height'],
-                   constants['panel_y'], mouse, constants['colors'], game_state)
+                   constants['panel_y'], mouse, constants['colors'], game_state, camera)
         fov_recompute = False
 
         libtcod.console_flush()
 
-        clear_all(con, entities)
+        clear_all(con, entities, camera)
 
         action = handle_keys(key, game_state)
         mouse_action = handle_mouse(mouse)
@@ -84,6 +87,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                     player_turn_results.extend(attack_results)
                 else:
                     player.move(dx, dy)
+                    camera.update(player)
                     fov_recompute = True
 
                 game_state = GameStates.ENEMY_TURN
@@ -123,6 +127,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                 if entity.stairs and entity.x == player.x and entity.y == player.y:
                     entities = game_map.next_floor(player, message_log, constants)
                     fov_map = initalize_fov(game_map)
+                    camera.update(player)
                     fov_recompute = True
                     libtcod.console_clear(con)
 
@@ -316,7 +321,7 @@ def main():
             arena = action.get('arena')
 
             if new_game:
-                player, entities, game_map, message_log, game_state = get_game_variables(constants)
+                player, entities, game_map, message_log, game_state, camera = get_game_variables(constants)
                 game_state = GameStates.PLAYERS_TURN
 
                 show_main_menu = False
@@ -337,7 +342,7 @@ def main():
 
         else:
             libtcod.console_clear(con)
-            play_game(player, entities, game_map, message_log, game_state, con, panel, constants)
+            play_game(player, entities, game_map, message_log, game_state, con, panel, constants, camera)
             show_main_menu = True
 
 
