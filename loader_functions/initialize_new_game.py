@@ -23,6 +23,8 @@ from map_objects.rectangle import Rect
 
 from render_functions import RenderOrder
 
+from camera import Camera
+
 
 def get_constants():
     window_title = "Gou Prototype 1.0v1 0 Alpona"
@@ -38,8 +40,8 @@ def get_constants():
     message_width = screen_width - bar_width - 2
     message_height = panel_height - 1
 
-    map_width = 80
-    map_height = 43
+    map_width = 100
+    map_height = 100
 
     room_max_size = 10
     room_min_size = 6
@@ -121,13 +123,22 @@ def get_game_variables(constants):
         entities,
     )
 
+    camera = Camera(
+        0,
+        0,
+        constants["screen_width"],
+        constants["screen_height"],
+        constants["map_width"],
+        constants["map_height"],
+    )
+
     message_log = MessageLog(
         constants["message_x"], constants["message_width"], constants["message_height"]
     )
 
     game_state = GameStates.PLAYERS_TURN
 
-    return player, entities, game_map, message_log, game_state
+    return player, entities, game_map, message_log, game_state, camera
 
 
 def get_arena_variables(constants):

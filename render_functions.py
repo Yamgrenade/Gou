@@ -8,6 +8,8 @@ from menus import inventory_menu, level_up_menu, character_screen, message_box
 
 from input_handlers import handle_popup
 
+from camera import Camera
+
 class RenderOrder(Enum):
     STAIRS = auto()
     CORPSE = auto()
@@ -42,31 +44,33 @@ def render_bar(panel, x, y, total_width, name, value, maximum, bar_color, back_c
 
 # Render all entities in the given list
 def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, message_log, screen_width, screen_height,
-               bar_width, panel_height, panel_y, mouse, colors, game_state):
+               bar_width, panel_height, panel_y, mouse, colors, game_state, camera):
     # Draw the tiles in the given map
     if fov_recompute:
+        libtcod.console_clear(con) # This was required to get screen scrolling working. There may be a more efficient way to update the screen but I can't think of one.
         for y in range(game_map.height):
             for x in range(game_map.width):
                 visible = libtcod.map_is_in_fov(fov_map, x, y)
                 wall = game_map.tiles[x][y].block_sight
+                x_in_camera, y_in_camera = camera.apply(x, y)
 
                 if visible:
                     if wall:
-                        libtcod.console_set_char_background(con, x, y, colors.get('light_wall'), libtcod.BKGND_SET)
+                        libtcod.console_set_char_background(con, x_in_camera, y_in_camera, colors.get('light_wall'), libtcod.BKGND_SET)
                     else:
-                        libtcod.console_set_char_background(con, x, y, colors.get('light_ground'), libtcod.BKGND_SET)
+                        libtcod.console_set_char_background(con, x_in_camera, y_in_camera, colors.get('light_ground'), libtcod.BKGND_SET)
 
                     game_map.tiles[x][y].explored = True
                 elif game_map.tiles[x][y].explored:
                     if wall:
-                        libtcod.console_set_char_background(con, x, y, colors.get('dark_wall'), libtcod.BKGND_SET)
+                        libtcod.console_set_char_background(con, x_in_camera, y_in_camera, colors.get('dark_wall'), libtcod.BKGND_SET)
                     else:
-                        libtcod.console_set_char_background(con, x, y, colors.get('dark_ground'), libtcod.BKGND_SET)
+                        libtcod.console_set_char_background(con, x_in_camera, y_in_camera, colors.get('dark_ground'), libtcod.BKGND_SET)
 
     entities_in_render_order = sorted(entities, key=lambda x: x.render_order.value)
 
     for entity in entities_in_render_order:
-        draw_entity(con, entity, fov_map, game_map)
+        draw_entity(con, entity, fov_map, game_map, camera)
 
     libtcod.console_blit(con, 0, 0, screen_width, screen_height, 0, 0, 0)
 
@@ -118,19 +122,21 @@ def popup(con, message, width, height):
 
 
 # erase all entities in the given list
-def clear_all(con, entities):
+def clear_all(con, entities, camera):
     for entity in entities:
-        clear_entity(con, entity)
+        clear_entity(con, entity, camera)
 
 
 # draw an entity's char
-def draw_entity(con, entity, fov_map, game_map):
+def draw_entity(con, entity, fov_map, game_map, camera):
+    x, y = camera.apply(entity.x, entity.y)
     if libtcod.map_is_in_fov(fov_map, entity.x, entity.y) \
             or (entity.stairs and game_map.tiles[entity.x][entity.y].explored):
         libtcod.console_set_default_foreground(con, entity.color)
-        libtcod.console_put_char(con, entity.x, entity.y, entity.char, libtcod.BKGND_NONE)
+        libtcod.console_put_char(con, x, y, entity.char, libtcod.BKGND_NONE)
 
 
 # erase an entity's char
-def clear_entity(con, entity):
-    libtcod.console_put_char(con, entity.x, entity.y, ' ', libtcod.BKGND_NONE)
+def clear_entity(con, entity, camera):
+    x, y = camera.apply(entity.x, entity.y)
+    libtcod.console_put_char(con, x, y, ' ', libtcod.BKGND_NONE)
