@@ -179,6 +179,5 @@ def character_screen(
         window, 0, 0, char_screen_width, char_screen_height, 0, x, y, 1.0, 0.7
     )
 
-
 def message_box(con, header, width, screen_width, screen_height):
     menu(con, header, [], width, screen_width, screen_height)

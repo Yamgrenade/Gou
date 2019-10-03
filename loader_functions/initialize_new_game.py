@@ -133,7 +133,7 @@ def get_game_variables(constants):
     )
 
     message_log = MessageLog(
-        constants["message_x"], constants["message_width"], constants["message_height"]
+        constants["message_x"], constants["message_width"], constants["message_height"], constants["screen_height"]
     )
 
     game_state = GameStates.PLAYERS_TURN

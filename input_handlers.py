@@ -16,6 +16,8 @@ def handle_keys(key, game_state):
         return handle_level_up_menu(key)
     elif game_state == GameStates.CHARACTER_SCREEN:
         return handle_character_screen(key)
+    elif game_state == GameStates.FULLSCREEN_CONSOLE:
+        return handle_fullscreen_console(key)
 
     return {}
 
@@ -84,6 +86,13 @@ def handle_character_screen(key):
 
     return {}
 
+def handle_fullscreen_console(key):
+    if key.vk == libtcod.KEY_ESCAPE:
+        return {'exit': True}
+    #add mouse controls to scroll up and down, maybe up and down arrow keys too
+
+    return {}
+
 def handle_player_turn_keys(key):
     key_char = chr(key.c)
 
@@ -121,9 +130,12 @@ def handle_player_turn_keys(key):
     elif key.vk == libtcod.KEY_ENTER:
         return {'take_stairs': True}
 
-    if key.vk ==libtcod.KEY_ENTER and key.lalt:
+    if key.vk == libtcod.KEY_ENTER and key.lalt:
         #Alt Enter to enter fullscreen
         return {'fullscreen': True}
+
+    elif key_char == 'f':
+        return {'fullscreen_console': True}
 
     elif key.vk == libtcod.KEY_ESCAPE:
         #Exit game/menu

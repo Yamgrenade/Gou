@@ -107,14 +107,25 @@ def render_all(con, panel, entities, player, game_map, fov_map, fov_recompute, m
 
     elif game_state == GameStates.CHARACTER_SCREEN:
         character_screen(player, 30, 10, screen_width, screen_height)  # TODO: More constants all over the place here
+    
+    elif game_state == GameStates.FULLSCREEN_CONSOLE:
+        window = libtcod.console_new(screen_width, screen_height)
 
-# Displays a popup with the given size and message. Is dismissed when any key is pressed
+        z = 1
+        for message in message_log.fullscreen_visible:
+            libtcod.console_set_default_foreground(window, message.color)
+            libtcod.console_print_ex(window, 0, z, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
+            z += 1
+
+        libtcod.console_blit(window, 0, 0, screen_width, screen_height, 0, 0, 0)
+
+# Displays a popup with the given size and message. Is dismissed when any key is pressed. 
+# TODO This should probably be refactored and put into menus.py
 def popup(con, message, width, height):
     dismiss = False
     
     while not dismiss:
-        message_box(con, message, 50,
-                    width, height)
+        message_box(con, message, 50, width, height)
         libtcod.console_flush()
         key = libtcod.console_wait_for_keypress(True)
         action = handle_popup(key)

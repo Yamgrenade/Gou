@@ -58,6 +58,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         show_character_screen = action.get('show_character_screen')
         exit = action.get('exit')
         fullscreen = action.get('fullscreen')
+        fullscreen_console = action.get('fullscreen_console')
 
         left_click = mouse_action.get('left_click')
         right_click = mouse_action.get('right_click')
@@ -151,6 +152,10 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
             previous_game_state = game_state
             game_state = GameStates.CHARACTER_SCREEN
 
+        if fullscreen_console:
+            previous_game_state = game_state
+            game_state = GameStates.FULLSCREEN_CONSOLE
+
         if game_state == GameStates.TARGETING:
             if left_click:
                 target_x, target_y = left_click
@@ -164,7 +169,7 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         if exit:
             if game_map.dungeon_level == -1: # Testing arena case needs no save file
                 return True
-            elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN):
+            elif game_state in (GameStates.SHOW_INVENTORY, GameStates.DROP_INVENTORY, GameStates.CHARACTER_SCREEN, GameStates.FULLSCREEN_CONSOLE):
                 game_state = previous_game_state
             elif game_state == GameStates.TARGETING:
                 player_turn_results.append({'targeting_cancelled': True})
