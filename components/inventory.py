@@ -63,8 +63,8 @@ class Inventory:
 
         # Make sure that if we drop an item we have equipped, we don't still have it equipped
 
-        if any(slot is item for slot in self.owner.equipment): 
-            self.owner.equipment.toggle_equip(item)
+        if any(slot is item for slot in vars(self.owner.equipment)):
+            self.owner.slot.toggle_equip(item)
 
         item.x = self.owner.x
         item.y = self.owner.y
