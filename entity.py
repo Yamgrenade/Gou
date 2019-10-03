@@ -56,17 +56,17 @@ class Entity:
         if self.equippable:
             self.equippable.owner = self
 
-        if self.trick_list:
-            self.trick_list.owner = self
-
-        if self.trick:
-            self.trick.owner = self
-
             # We can't have equippables that aren't also usables, so add it if it doesn't have it
             if not self.usable:
                 usable = Usable()
                 self.usable = usable
                 self.usable.owner = self
+
+        if self.trick_list:
+            self.trick_list.owner = self
+
+        if self.trick:
+            self.trick.owner = self
 
     # move the entity by the specified dx, dy
     def move(self, dx, dy):
