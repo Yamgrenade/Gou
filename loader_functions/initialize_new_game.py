@@ -166,10 +166,19 @@ def get_arena_variables(constants):
     game_map = GameMap(constants["map_width"], constants["map_height"])
     game_map.make_arena(entities)
 
+    camera = Camera(
+        0,
+        0,
+        constants["screen_width"],
+        constants["screen_height"],
+        constants["map_width"],
+        constants["map_height"],
+    )
+
     message_log = MessageLog(
-        constants["message_x"], constants["message_width"], constants["message_height"]
+        constants["message_x"], constants["message_width"], constants["message_height"], constants["screen_height"]
     )
 
     game_state = GameStates.PLAYERS_TURN
 
-    return player, entities, game_map, message_log, game_state
+    return player, entities, game_map, message_log, game_state, camera

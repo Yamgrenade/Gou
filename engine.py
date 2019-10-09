@@ -338,7 +338,7 @@ def main():
                     popup(con, 'No save game to load',
                           constants['screen_width'], constants['screen_height'])
             elif arena:
-                player, entities, game_map, message_log, game_state = get_arena_variables(constants)
+                player, entities, game_map, message_log, game_state, camera = get_arena_variables(constants)
                 game_state = GameStates.PLAYERS_TURN
 
                 show_main_menu = False
