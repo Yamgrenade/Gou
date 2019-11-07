@@ -3,6 +3,7 @@
 *.dat
 *.dir
 *savegame
+savegame.db
 
 # ide files
 /.idea
