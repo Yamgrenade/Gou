@@ -42,6 +42,16 @@ class Equipment:
 
         return bonus
 
+    @property
+    def speed_bonus(self):
+        bonus = 0
+
+        for slot in vars(self).values():
+            if slot and slot.equippable:
+                bonus += slot.equippable.speed_bonus
+
+        return bonus
+
     def toggle_equip(self, equippable_entity):
         results = []
 

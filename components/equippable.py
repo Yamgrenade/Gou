@@ -3,10 +3,11 @@ from components.modifier import equippable_material, equippable_enchantment
 from equipment_slots import EquipmentSlotGroups
 
 class Equippable:
-    def __init__(self, slot, power_bonus=0, defense_bonus=0, max_hp_bonus=0):
+    def __init__(self, slot, power_bonus=0, defense_bonus=0, speed_bonus=0, max_hp_bonus=0):
         self.slot = slot
         self.power_bonus = power_bonus
         self.defense_bonus = defense_bonus
+        self.speed_bonus = speed_bonus
         self.max_hp_bonus = max_hp_bonus
         # Modifiers are currently added directly instead of being their own attributes but it might actually be nice to know what kind of modifier an item is
 

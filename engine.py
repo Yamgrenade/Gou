@@ -12,7 +12,6 @@ from game_messages import Message
 from render_functions import clear_all, render_all, popup
 from camera import Camera
 
-
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, camera):
 
     fov_recompute = True
@@ -65,7 +64,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
         wheel_up = mouse_action.get('wheel_up')
         wheel_down = mouse_action.get('wheel_down')
-
 
         player_turn_results = []
 
@@ -144,6 +142,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                 player.fighter.base_power += 1
             elif level_up == 'def':
                 player.fighter.base_defense += 1
+            elif level_up == 'speed':
+                player.fighter.base_speed += 10
 
             # game_state = previous_game_state   # This is the only way I found that the level up book doesn't lock
             game_state = GameStates.PLAYERS_TURN # the game, hopefully it's fine but it may give an extra turn on lvl up
@@ -281,7 +281,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
             else:
                 game_state = GameStates.PLAYERS_TURN
-
 
 def main():
     constants = get_constants()

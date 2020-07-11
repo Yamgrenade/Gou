@@ -90,6 +90,7 @@ def level_up_menu(con, header, player, menu_width, screen_width, screen_height):
         "Constitution (+20 HP, from {0})".format(player.fighter.max_hp),
         "Strength (+1 attack, from {0})".format(player.fighter.power),
         "Agility (+1 defense, from {0})".format(player.fighter.defense),
+        "Speed (+10 speed, from {0})".format(player.fighter.speed)
     ]
 
     menu(con, header, options, menu_width, screen_width, screen_height)
@@ -171,6 +172,16 @@ def character_screen(
         libtcod.BKGND_NONE,
         libtcod.LEFT,
         "Defense: {0}".format(player.fighter.defense),
+    )
+    libtcod.console_print_rect_ex(
+        window,
+        0,
+        9,
+        char_screen_width,
+        char_screen_height,
+        libtcod.BKGND_NONE,
+        libtcod.LEFT,
+        "Speed: {0}".format(player.fighter.speed),
     )
 
     x = screen_width // 2 - char_screen_width // 2
