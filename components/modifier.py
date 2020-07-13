@@ -17,5 +17,5 @@ equippable_enchantment = {
   '': Modifier([70], {}), # No Enchantment
   'Flames': Modifier([10], EquipmentSlotGroups.WEAPONS, {'power_bonus': 2}),
   'Strength': Modifier([10], {'power_bonus': 1, 'defense_bonus': 1}),
-  'Speed': Modifier([100], {'speed_bonus': 20})
+  'Speed': Modifier([100], {'speed_bonus': -20})
 }

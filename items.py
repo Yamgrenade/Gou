@@ -29,7 +29,7 @@ items = {
     equippable=Equippable(EquipmentSlots.HEAD, defense_bonus=1)),
 
   'boots': Entity([[20, 1]], -1, -1, 'b', libtcod.darker_green, 'Boots',
-    equippable=Equippable(EquipmentSlots.FEET, defense_bonus=1, speed_bonus=-10)),
+    equippable=Equippable(EquipmentSlots.FEET, defense_bonus=1, speed_bonus=+10)),
 
   # USABLES
 

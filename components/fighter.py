@@ -9,6 +9,7 @@ class Fighter:
         self.base_defense = defense
         self.base_power = power
         self.base_speed = speed
+        self.current_moves = speed
         self.xp = xp
 
     # Equipment might want a rework so that it supports many mort effects easier.
