@@ -76,6 +76,8 @@ def handle_level_up_menu(key):
             return {'level_up': 'str'}
         elif key_char == 'c':
             return {'level_up': 'def'}
+        elif key_char == 'd':
+            return {'level_up': 'speed'}
 
     return {}
 

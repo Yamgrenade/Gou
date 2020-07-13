@@ -35,7 +35,6 @@ def heal(*args, **kwargs):
 
     return results
 
-
 def cast_lightning(*args, **kwargs):
     caster = args[0]
     entities = kwargs.get("entities")
@@ -190,7 +189,7 @@ def spawn_orc(*args, **kwargs):
     target_x = kwargs.get("target_x")
     target_y = kwargs.get("target_y")
 
-    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
+    fighter_component = Fighter(hp=20, defense=0, power=4, speed=150, xp=35)
     ai_component = BasicMonster()
     orc = Entity([], target_x, target_y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
                     render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)

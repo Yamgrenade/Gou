@@ -12,7 +12,6 @@ from game_messages import Message
 from render_functions import clear_all, render_all, popup
 from camera import Camera
 
-
 def play_game(player, entities, game_map, message_log, game_state, con, panel, constants, camera):
 
     fov_recompute = True
@@ -65,7 +64,6 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
 
         wheel_up = mouse_action.get('wheel_up')
         wheel_down = mouse_action.get('wheel_down')
-
 
         player_turn_results = []
 
@@ -144,6 +142,8 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
                 player.fighter.base_power += 1
             elif level_up == 'def':
                 player.fighter.base_defense += 1
+            elif level_up == 'speed':
+                player.fighter.base_speed -= 10
 
             # game_state = previous_game_state   # This is the only way I found that the level up book doesn't lock
             game_state = GameStates.PLAYERS_TURN # the game, hopefully it's fine but it may give an extra turn on lvl up
@@ -256,32 +256,35 @@ def play_game(player, entities, game_map, message_log, game_state, con, panel, c
         if game_state == GameStates.ENEMY_TURN:
             for entity in entities:
                 if entity.ai:
-                    enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
+                    current_moves = entity.fighter.current_moves
+                    current_moves -= player.fighter.base_speed
 
-                    for enemy_turn_result in enemy_turn_results:
-                        message = enemy_turn_result.get('message')
-                        dead_entity = enemy_turn_result.get('dead')
+                    while (current_moves <= 0): 
+                        enemy_turn_results = entity.ai.take_turn(player, fov_map, game_map, entities)
+                        for enemy_turn_result in enemy_turn_results:
+                            message = enemy_turn_result.get('message')
+                            dead_entity = enemy_turn_result.get('dead')
 
-                        if message:
-                            message_log.add_message(message)
+                            if message:
+                                message_log.add_message(message)
 
-                        if dead_entity:
-                            if dead_entity == player:
-                                message, game_state = kill_player(dead_entity)
-                            else:
-                                message = kill_monster(dead_entity)
+                            if dead_entity:
+                                if dead_entity == player:
+                                    message, game_state = kill_player(dead_entity)
+                                else:
+                                    message = kill_monster(dead_entity)
 
-                            message_log.add_message(message)
+                                message_log.add_message(message)
 
-                            if game_state == GameStates.PLAYER_DEAD:
+                                if game_state == GameStates.PLAYER_DEAD:
+                                    break  # Break game loop
+                        if game_state == GameStates.PLAYER_DEAD:
                                 break  # Break game loop
-
-                    if game_state == GameStates.PLAYER_DEAD:
-                        break  # Break game loop
-
-            else:
-                game_state = GameStates.PLAYERS_TURN
-
+                        
+                        current_moves += entity.fighter.speed
+                    entity.fighter.current_moves = current_moves
+                else:
+                    game_state = GameStates.PLAYERS_TURN
 
 def main():
     constants = get_constants()

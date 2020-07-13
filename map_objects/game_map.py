@@ -16,7 +16,7 @@ from components.stairs import Stairs
 from random_utils import random_choice_from_dict, from_dungeon_level
 from monsters import monsters
 from items import items
-from random import randint
+from random import randint, seed
 
 
 class GameMap:
@@ -40,6 +40,8 @@ class GameMap:
 
         last_room_center_x = None
         last_room_center_y = None
+
+        # seed(0)
 
         # generate random size rooms
         for r in range(max_rooms):

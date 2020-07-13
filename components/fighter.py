@@ -3,11 +3,13 @@ import tcod as libtcod
 from game_messages import Message
 
 class Fighter:
-    def __init__(self, hp, defense, power, xp=0):
+    def __init__(self, hp, defense, power, speed, xp=0):
         self.base_max_hp = hp
         self.hp = hp
         self.base_defense = defense
         self.base_power = power
+        self.base_speed = speed
+        self.current_moves = speed
         self.xp = xp
 
     # Equipment might want a rework so that it supports many mort effects easier.
@@ -39,6 +41,15 @@ class Fighter:
 
         return self.base_defense + bonus
 
+    @property
+    def speed(self):
+        if self.owner and self.owner.equipment:
+            bonus = self.owner.equipment.speed_bonus
+        else:
+            bonus = 0
+
+        return self.base_speed + bonus
+
     def take_damage(self, amount):
         results = []
 
@@ -69,3 +80,11 @@ class Fighter:
                 self.owner.name, target.name))})
 
         return results
+
+    # def damage_over_time(self, damage, turns):
+    #     for turn in turns:
+    #         self.take_damage(damage)
+
+    # def stun(self, turns):
+    #     for turn in turns:
+    #         skip turn
