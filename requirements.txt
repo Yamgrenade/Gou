@@ -1,5 +1,5 @@
 cffi==1.12.3
-numpy==1.16.4
+numpy==1.22.0
 pycparser==2.19
 shelve2==1.0
 tcod==11.0.2
